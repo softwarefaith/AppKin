@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, AppThemeType){
 };
 /*!
  *
- *  @brief  bundle   path
+ *  @brief  bundle   path  本地获取需要设置  皮肤的路径
  *
  *  @param  type   AppThemeType
  *
@@ -75,31 +75,74 @@ static inline NSString *getThemeResourcePath(AppThemeType type){
 
 @end
 
-@interface  UIImage(ImageResourceFind)
-
-
-
-+(UIImage *)imageResourceNamed:(NSString *)name;
-
-@end
-
-@implementation UIImage(ImageResourceFind)
-
-+(UIImage *)imageResourceNamed:(NSString *)name{
-    
-    UIImage *image = [[ThemeManager sharedThemeManager] themedImageWithName:name];
-    
-    if (image) {
-        return image;
-    }
-    return [UIImage imageNamed:name];
-}
-
-
-
-@end
 /*!
  *
  *  @brief  皮肤更改通知
  */
 extern NSString * const kAppThemeTypeChanged;
+
+
+#pragma mark  --Theme Category
+typedef NS_ENUM(NSInteger, AppThemeStyleType){
+   
+    AppThemeStyleTypeCommon =0, //公共资源
+    AppThemeStyleTypeCustomer = 1
+};
+
+
+
+@interface  UIImage(ImageResourceFind)
+
++(UIImage *)imageResourceNamed:(NSString *)name  StyleType:(AppThemeStyleType)styleType;
+
++(UIImage *)imageCommonResourceNamed:(NSString *)name;
+
++(UIImage *)imageCustomerResourceNamed:(NSString *)name;
+
+@end
+
+@implementation UIImage(ImageResourceFind)
+
++(UIImage *)imageCommonResourceNamed:(NSString *)name{
+    
+    return [UIImage imageResourceNamed:name StyleType:AppThemeStyleTypeCommon];
+}
+
++(UIImage *)imageCustomerResourceNamed:(NSString *)name{
+    
+    return [UIImage imageResourceNamed:name StyleType:AppThemeStyleTypeCustomer];
+}
+
++(UIImage *)imageResourceNamed:(NSString *)name  StyleType:(AppThemeStyleType)styleType{
+    
+    switch (styleType) {
+            
+        case AppThemeStyleTypeCommon:{
+            
+            return [UIImage imageNamed:name];
+             break;
+        }
+           
+        case AppThemeStyleTypeCustomer:{
+        
+            UIImage *image = [[ThemeManager sharedThemeManager] themedImageWithName:name];
+            
+            if (image) {
+                return image;
+            }else{
+                 return [UIImage imageNamed:name];
+                
+            }
+           
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    return [UIImage imageNamed:name];
+    
+}
+@end
+

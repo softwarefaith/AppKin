@@ -25,7 +25,7 @@
     
     //_tesImageView.image = [UIImage imageNamed:@"home_icon_data_usage.png"];
     
-    _tesImageView.image = [UIImage imageResourceNamed:@"home_icon_data_usage"];;
+    _tesImageView.image = [UIImage imageCommonResourceNamed:@"home_icon_data_usage"];;
 
    
 }
@@ -49,7 +49,7 @@
 
 -(void)appkinChange{
     
-    _tesImageView.image = [UIImage imageResourceNamed:@"home_icon_data_usage"];
+    _tesImageView.image = [UIImage imageCustomerResourceNamed:@"home_icon_data_usage"];
 
 }
 @end

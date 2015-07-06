@@ -20,7 +20,8 @@ static NSString *const kAppThemeType  = @"AppThemeType";
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        theme = [[ThemeManager alloc]init];
+         theme = [[ThemeManager alloc]init];
+        
         
     });
     return theme;
@@ -30,6 +31,7 @@ static NSString *const kAppThemeType  = @"AppThemeType";
     
     NSInteger type = [[NSUserDefaults standardUserDefaults]integerForKey:kAppThemeType];
     if (type > 0 ) {
+        
         return (AppThemeType)type;
     }
     return AppThemeTypeDefault;
@@ -42,21 +44,21 @@ static NSString *const kAppThemeType  = @"AppThemeType";
     }
     
     [[NSUserDefaults standardUserDefaults]setInteger:aThemeType forKey:kAppThemeType];
-    
     [[NSUserDefaults standardUserDefaults] synchronize];
 
-    
-    self.themePath = getThemeResourcePath(aThemeType);
-    
     [[NSNotificationCenter defaultCenter]postNotificationName:kAppThemeTypeChanged object:nil userInfo:nil];
-    
+}
+
+-(NSString *)themePath{
+    NSInteger type = [[NSUserDefaults standardUserDefaults]integerForKey:kAppThemeType];
+    return  getThemeResourcePath(type);
 }
 - (UIImage*)themedImageWithName:(NSString*)imgName{
     
-    if (!imgName || [imgName isEqualToString:@""]) {
-        return nil;
-    }
-
+    
+    if(self.themeType ==  AppThemeTypeDefault)  return nil;
+    
+    if (!imgName || [imgName isEqualToString:@""]) return nil;
     //先判断bundle
     
     if (!([self.themePath length] > 0)) {
